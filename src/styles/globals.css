@@ -1,26 +1,73 @@
+/* src/styles/globals.css */
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --primary: #0891B2;
+  --primary-dark: #06B6D4;
+  --bg-light: #F0F4F8;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-light);
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+/* Container untuk simulasi HP */
+.mobile-container {
+  min-height: 100vh;
+  width: 100%;
+  max-width: 448px; /* Ini adalah nilai dari max-w-md */
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  background-color: #F0F4F8;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Card Style Premium */
+.card-premium {
+  background-color: white;
+  border-radius: 2rem;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #f1f5f9;
+}
+
+/* Gradient Card */
+.card-gradient {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-radius: 2.5rem;
+  padding: 1.5rem;
+  color: white;
+  box-shadow: 0 10px 15px -3px rgba(8, 145, 178, 0.2);
+}
+
+/* Navigasi Bawah */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 448px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid #f3f4f6;
+  padding: 0.75rem 0.5rem;
+  z-index: 50;
+}
+
+/* Animasi Pulse */
+.feed-button-pulse {
+  animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(8, 145, 178, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(8, 145, 178, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(8, 145, 178, 0); }
 }
