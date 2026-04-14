@@ -71,3 +71,15 @@ body {
   70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(8, 145, 178, 0); }
   100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(8, 145, 178, 0); }
 }
+
+/* Custom Scrollbar agar lebih bersih */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
+
+/* Animasi Pulse untuk tombol Feed */
+.feed-button-pulse { animation: pulse-ring 2s infinite; }
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(8, 145, 178, 0.4); }
+  70% { box-shadow: 0 0 0 20px rgba(8, 145, 178, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(8, 145, 178, 0); }
+}
