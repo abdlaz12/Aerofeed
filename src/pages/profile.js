@@ -12,23 +12,19 @@ const groups = [
     rows: [
       { icon: Wifi,        label: "Device Status", sub: "AeroFeed Unit A1",        value: "Connected", iconBg: "bg-cyan-50", iconColor: "text-cyan-600" },
       { icon: Fish,        label: "Feed System",   sub: "Pellet dispenser active",  value: "Ready",     iconBg: "bg-cyan-50", iconColor: "text-cyan-600" },
-      { icon: Smartphone,  label: "Software",      sub: "AeroFeed Desktop v2.4.1", value: "Up to date", iconBg: "bg-slate-100", iconColor: "text-slate-500" },
     ],
   },
   {
     title: "Account & Security",
     rows: [
       { icon: CreditCard,  label: "Subscription",  sub: "Renews June 10, 2026",    badge: "PRO",    iconBg: "bg-cyan-50", iconColor: "text-cyan-600" },
-      { icon: Shield,      label: "Two-Factor",    sub: "Biometric login active",  value: "Secure", iconBg: "bg-green-50", iconColor: "text-green-600" },
       { icon: Bell,        label: "Alerts",        sub: "Push & Email notifications", value: "On",     iconBg: "bg-amber-50", iconColor: "text-amber-600" },
     ],
   },
   {
     title: "Support",
     rows: [
-      { icon: HelpCircle,  label: "Knowledge Base", sub: "Tutorials & API Docs",    iconBg: "bg-slate-100", iconColor: "text-slate-500" },
-      { icon: Star,        label: "Feedback",       sub: "Help us improve AeroFeed", iconBg: "bg-amber-50", iconColor: "text-amber-600" },
-      { icon: Settings,    label: "Advanced",       sub: "Developer mode & Webhooks", iconBg: "bg-purple-50", iconColor: "text-purple-600" },
+      { icon: HelpCircle,  label: "Contact Us", sub: "For Help and Information",    iconBg: "bg-slate-100", iconColor: "text-slate-500" },
     ],
   },
 ];
@@ -64,17 +60,12 @@ export default function Profile() {
               <p className="text-cyan-100 text-sm font-medium mb-4">aziz@aerofeed.id</p>
               
               <div className="flex gap-2">
-                <span className="px-3 py-1 bg-white/20 rounded-full text-[10px] font-black tracking-widest uppercase border border-white/10">★ PRO USER</span>
                 <span className="px-3 py-1 bg-green-500/30 rounded-full text-[10px] font-black tracking-widest uppercase border border-green-400/30">Active</span>
               </div>
             </div>
 
             {/* Achievement Badge */}
             <div className="mt-8 pt-6 border-t border-white/10 relative z-10">
-              <div className="flex items-center gap-3 bg-white/10 p-4 rounded-2xl border border-white/5">
-                <Award size={20} className="text-amber-300" />
-                <p className="text-[10px] font-bold leading-tight">Canada-ASEAN SEED Scholar 2026</p>
-              </div>
             </div>
 
             <div className="absolute -top-10 -left-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />

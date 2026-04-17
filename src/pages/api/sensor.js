@@ -1,17 +1,24 @@
 import connectDB from '../../lib/mongodb';
-import SensorData from '../../models/SensorData';
+import SensorData from '../../models/SensorLog';
+import Tank from '../../models/Tank'; // Import model Tank untuk verifikasi device_id
 
 export default async function handler(req, res) {
   await connectDB();
 
   if (req.method === 'POST') {
     try {
-      // Wokwi akan mengirim json: { "ph": 7.0, "temp": 28.5 }
-      const { ph, temp } = req.body; 
+      // Wokwi mengirim: { "device_id": "AF-AQU-001", "ph": 7.0, "temp": 28.5 }
+      const { device_id, ph, temp } = req.body; 
       
+      // Cari tank_id berdasarkan device_id yang dikirim Wokwi
+      const tank = await Tank.findOne({ device_id });
+      if (!tank) return res.status(404).json({ success: false, message: 'Device not registered' });
+
       const newData = await SensorData.create({ 
-        phValue: ph, 
-        temperatureValue: temp 
+        tank_id: tank._id, // Hubungkan log ke tank yang benar
+        ph: ph, 
+        temp: temp,
+        timestamp: new Date()
       });
       
       return res.status(201).json({ success: true, data: newData });
@@ -19,7 +26,12 @@ export default async function handler(req, res) {
       return res.status(500).json({ success: false, error: error.message });
     }
   } else if (req.method === 'GET') {
-    const data = await SensorData.find().sort({ timestamp: -1 });
+    // Digunakan Dashboard untuk ambil data terbaru
+    // Tambahkan filter query jika ingin mengambil data tank tertentu, misal: ?tank_id=...
+    const { tank_id } = req.query;
+    const filter = tank_id ? { tank_id } : {};
+    
+    const data = await SensorData.find(filter).sort({ timestamp: -1 }).limit(10);
     return res.status(200).json(data);
   }
 }

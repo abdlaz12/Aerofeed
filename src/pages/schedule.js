@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CalendarClock, Clock, Trash2, Plus, Sparkles } from "lucide-react";
+import Link from 'next/link';
 
 const initialSchedules = [
   { id: 1, time: "06:00", period: "AM", label: "Morning Feed", portion: "Medium", color: "bg-cyan-50 text-cyan-600", enabled: true },
@@ -26,7 +27,7 @@ export default function SchedulePage() {
         </button>
       </header>
 
-      {/* AI Optimized Banner */}
+      {/* AI Optimized Banner (Ditambah link ke chat) */}
       <div className="bg-white border border-cyan-100 rounded-[2rem] p-6 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-5">
           <div className="w-14 h-14 rounded-2xl bg-cyan-50 flex items-center justify-center text-cyan-600 shadow-inner">
@@ -37,8 +38,15 @@ export default function SchedulePage() {
             <p className="text-slate-400 text-xs font-medium">Your current setup provides 100% nutrition for Arwana.</p>
           </div>
         </div>
-        <div className="px-4 py-2 bg-slate-50 rounded-xl text-slate-500 text-[10px] font-black uppercase tracking-widest border border-slate-100">
-          Auto-Sync Active
+        <div className="flex items-center gap-3">
+          <Link href="/chat">
+            <button className="px-4 py-2 bg-cyan-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-cyan-700 transition-all shadow-md shadow-cyan-100">
+              Consult AI
+            </button>
+          </Link>
+          <div className="px-4 py-2 bg-slate-50 rounded-xl text-slate-500 text-[10px] font-black uppercase tracking-widest border border-slate-100">
+            Auto-Sync
+          </div>
         </div>
       </div>
 

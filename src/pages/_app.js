@@ -7,7 +7,8 @@ export default function App({ Component, pageProps }) {
 
   // Daftar halaman yang TIDAK ingin menampilkan Sidebar
   // Kamu bisa tambah '/login' atau '/register' di sini nanti
-  const noSidebarPages = ['/']; 
+  // src/pages/_app.js
+  const noSidebarPages = ['/', '/login', '/register'];
 
   const isNoSidebar = noSidebarPages.includes(router.pathname);
 
