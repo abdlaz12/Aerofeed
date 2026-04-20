@@ -1,5 +1,5 @@
-import connectDB from '../../lib/mongodb';
-import Tank from '../../models/ta';
+import connectDB from '../../../lib/mongodb';
+import Tank from '../../../models/Tank';
 import SensorLog from '../../../models/SensorLog';
 
 export default async function handler(req, res) {
