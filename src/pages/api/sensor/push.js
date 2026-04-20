@@ -1,4 +1,4 @@
-import connectDB from '../../../lib/connectDB';
+import connectDB from '../../../lib/mongodb';
 import Tank from '../../../models/Tank';
 import SensorLog from '../../../models/SensorLog';
 

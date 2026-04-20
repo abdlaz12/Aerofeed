@@ -39,7 +39,15 @@ export default function DashboardPage() {
     const fetchData = async () => {
       try {
         const res = await fetch(`/api/sensor?deviceId=${selectedDevice}`);
-        const data = await res.json();
+        const text = await res.text();
+
+        let data;
+
+        try {
+          data = JSON.parse(text);
+        } catch (err) {
+          console.error("Response bukan JSON:", text);
+        }
         if (data && data.length > 0) {
           setSensor({ ph: data[0].ph, temp: data[0].temp });
         }

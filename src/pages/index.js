@@ -34,20 +34,23 @@ export default function LandingPage() {
       {/* ── HERO SECTION ── */}
       <section className="pt-32 pb-20 px-6 text-center">
         <div className="max-w-4xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 bg-cyan-50 text-cyan-700 px-4 py-1.5 rounded-full text-xs font-bold mb-6"
-          >
-            <Award size={14} /> Canada-ASEAN SEED Research Project 2026
-          </motion.div>
           <h1 className="text-5xl md:text-7xl font-black text-slate-900 leading-[1.1] mb-6 tracking-tight">
             Revolutionizing <span className="text-cyan-600">Aquaculture</span> with AI.
           </h1>
           <p className="text-lg text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed">
-            AeroFeed integrates IoT sensors and machine learning to optimize fish nutrition, 
-            reducing waste by 30% while maximizing growth.
+            AeroFeed integrates IoT sensors and machine learning to optimize fish nutrition and maximizing growth.
           </p>
+          
+          {/* Penambahan Visual Alat IoT */}
+          <div className="relative mt-12 mb-20">
+            <div className="absolute inset-0 bg-cyan-200/30 blur-3xl rounded-full scale-75 -z-10"></div>
+            <img 
+              src="/iot-device-mockup.png" // Ganti dengan foto AeroFeed milikmu
+              alt="AeroFeed IoT Device"
+              className="w-full max-w-2xl mx-auto rounded-3xl shadow-2xl border-4 border-white"
+            />
+          </div>
+
           <Link href="/dashboard">
             <button className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all mx-auto">
               Try SmartFin Demo <ArrowRight size={18} />
@@ -91,40 +94,79 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── FOUNDER SECTION ── */}
-      <section className="py-24 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
-          <div className="md:w-1/2">
-            <div className="relative">
-              <div className="w-full aspect-square bg-cyan-100 rounded-[3rem] overflow-hidden border-8 border-white shadow-2xl flex items-center justify-center">
-                 <UserCircle2 size={200} className="text-cyan-300" />
-              </div>
-              <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-3xl shadow-xl border border-slate-50 max-w-[240px]">
-                <p className="text-xs font-black text-cyan-600 uppercase mb-2">Lead Developer</p>
-                <p className="text-sm font-bold text-slate-800 italic">"Technology is the bridge to a more sustainable food future."</p>
-              </div>
+      {/* ── IMPACT STATS ── */}
+      <section className="py-12 bg-cyan-900 text-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-black mb-1">98%</div>
+              <div className="text-cyan-300 text-xs font-bold uppercase tracking-widest">Sensor Accuracy</div>
+            </div>
+            <div>
+              <div className="text-4xl font-black mb-1">24/7</div>
+              <div className="text-cyan-300 text-xs font-bold uppercase tracking-widest">Real-time Monitoring</div>
+            </div>
+            <div>
+              <div className="text-4xl font-black mb-1">15%</div>
+              <div className="text-cyan-300 text-xs font-bold uppercase tracking-widest">Feed Efficiency</div>
+            </div>
+            <div>
+              <div className="text-4xl font-black mb-1">IoT</div>
+              <div className="text-cyan-300 text-xs font-bold uppercase tracking-widest">Integrated</div>
             </div>
           </div>
-          <div className="md:w-1/2 text-left">
-            <h2 className="text-4xl font-black mb-6 tracking-tight">Meet the Visionary.</h2>
-            <p className="text-lg text-slate-500 mb-8 leading-relaxed">
-              Founded by <strong>Abdul Aziz Setiadi Haryanto</strong>, a Software Engineering student 
-              at Universitas Prasetiya Mulya and Bhakti Prasetiya Mulya Scholarship awardee.
+        </div>
+      </section>
+
+      {/* ── FOUNDER SECTION ── */}
+      <section className="py-24 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black mb-4 tracking-tight text-slate-900">Meet the Visionaries.</h2>
+            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+              Founded by <strong>Abdul Aziz Setiadi Haryanto</strong> and a dedicated team of Software Engineering students from Universitas Prasetiya Mulya.
             </p>
-            <ul className="space-y-4 text-slate-700 font-medium">
-              <li className="flex items-center gap-3">
-                <CheckCircle2 className="text-cyan-500" size={20} /> Software Engineering Student at Universitas Prasetiya Mulya
-              </li>
-              <li className="flex items-center gap-3">
-                <CheckCircle2 className="text-cyan-500" size={20} /> Canada-ASEAN SEED Scholarship Recipient 2026
-              </li>
-              <li className="flex items-center gap-3">
-                <CheckCircle2 className="text-cyan-500" size={20} /> Cloud Computing Expert (AWS Certified)
-              </li>
-              <li className="flex items-center gap-3">
-                <CheckCircle2 className="text-cyan-500" size={20} /> Published Agricultural Researcher
-              </li>
-            </ul>
+          </div>
+
+          {/* Grid Para Founder */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-20">
+            {[
+              { name: "Abdul Aziz", role: "Software Engineering" },
+              { name: "Habil", role: "Software Engineering" },
+              { name: "Taufik", role: "Renewable Energy Engineering" },
+              { name: "Bagas", role: "Renewable Energy Engineering" },
+              { name: "Josep", role: "Software Engineering" }
+            ].map((founder, index) => (
+              <div key={index} className="text-center">
+                <div className="w-full aspect-square bg-slate-100 rounded-3xl mb-4 flex items-center justify-center border-2 border-slate-50 shadow-inner">
+                  <UserCircle2 size={48} className="text-slate-300" />
+                </div>
+                <h4 className="font-bold text-slate-900 text-sm">{founder.name}</h4>
+                <p className="text-xs text-cyan-600 font-medium">{founder.role}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Detail & Achievement */}
+          <div className="bg-slate-50 rounded-[3rem] p-8 md:p-12 flex flex-col md:flex-row items-center gap-12">
+            <div className="md:w-1/2">
+              <ul className="space-y-4 text-slate-700 font-medium">
+                <li className="flex items-center gap-3">
+                  <CheckCircle2 className="text-cyan-500" size={20} /> STEM Students at Universitas Prasetiya Mulya
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle2 className="text-cyan-500" size={20} /> Prasetiya Mulya University Students
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle2 className="text-cyan-500" size={20} /> Integrated IoT & AI Research Group
+                </li>
+              </ul>
+            </div>
+            <div className="md:w-1/2 border-l border-slate-200 md:pl-12">
+              <p className="text-xl font-bold text-slate-800 italic leading-relaxed">
+                "AeroFeed bukan sekadar alat, tapi komitmen kami untuk efisiensi akuakultur di Indonesia melalui teknologi presisi."
+              </p>
+            </div>
           </div>
         </div>
       </section>

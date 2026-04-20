@@ -28,8 +28,16 @@ export default async function handler(req, res) {
   } else if (req.method === 'GET') {
     // Digunakan Dashboard untuk ambil data terbaru
     // Tambahkan filter query jika ingin mengambil data tank tertentu, misal: ?tank_id=...
-    const { tank_id } = req.query;
-    const filter = tank_id ? { tank_id } : {};
+    const { device_id } = req.query;
+
+    let filter = {};
+
+    if (device_id) {
+      const tank = await Tank.findOne({ device_id });
+      if (tank) {
+        filter = { tank_id: tank._id };
+      }
+    }
     
     const data = await SensorData.find(filter).sort({ timestamp: -1 }).limit(10);
     return res.status(200).json(data);
