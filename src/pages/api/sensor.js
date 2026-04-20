@@ -1,6 +1,6 @@
-import connectDB from '../../lib/mongodb';
-import SensorData from '../../models/SensorLog';
-import Tank from '../../models/Tank'; // Import model Tank untuk verifikasi device_id
+import connectDB from '@/lib/mongodb';
+import SensorData from '@/models/SensorLog';
+import Tank from '@/models/Tank'; // Import model Tank untuk verifikasi device_id
 
 export default async function handler(req, res) {
   await connectDB();

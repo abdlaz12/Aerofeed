@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import NotificationDropdown from '../components/NotificationDropdown';
+import NotificationDropdown from '@/components/NotificationDropdown';
 import { Wifi, Fish, ChevronRight, CheckCircle2, Bell, Sparkles, ChevronDown, Monitor } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from 'next/link';
