@@ -1,3 +1,5 @@
+// #testing untuk apakah bisa push langsung
+
 import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI;
