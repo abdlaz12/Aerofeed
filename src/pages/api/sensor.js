@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       const tank = await Tank.findOne({ device_id });
       if (!tank) return res.status(404).json({ success: false, message: 'Device not registered' });
 
-      const newData = await SensorData.create({ 
+      const newData = await SensorLog.create({ 
         tank_id: tank._id, // Hubungkan log ke tank yang benar
         ph: ph, 
         temp: temp,
