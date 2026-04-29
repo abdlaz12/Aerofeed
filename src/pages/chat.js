@@ -1,17 +1,59 @@
-import { useState } from 'react';
-import { Send, Bot, User, Sparkles, Brain, Info, Activity } from "lucide-react";
+import { useState, useEffect, useRef } from 'react';
+import { Send, Bot, User, Sparkles, Brain, Activity, Loader2 } from "lucide-react";
 import ProtectedRoute from '../components/ProtectedRoute';
 
 export default function AIChatPage() {
   const [messages, setMessages] = useState([
-    { role: 'ai', content: 'Halo Aziz! Saya asisten AeroFeed. Berdasarkan data terakhir, pH aquarium Arwanamu sedikit naik. Ada yang ingin dikonsultasikan?' }
+    { role: 'ai', content: 'Halo Aziz! Saya asisten AeroFeed. Ada yang ingin dikonsultasikan mengenai kondisi aquarium Anda hari ini?' }
   ]);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const scrollRef = useRef(null);
 
-  const sendMessage = () => {
-    if (!input.trim()) return;
-    setMessages([...messages, { role: 'user', content: input }]);
+  // Auto scroll ke pesan terbaru
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const sendMessage = async () => {
+    if (!input.trim() || isLoading) return;
+
+    const userMessage = { role: 'user', content: input };
+    setMessages(prev => [...prev, userMessage]);
     setInput('');
+    setIsLoading(true);
+
+    try {
+      // Panggil API Gemini di backend
+      const response = await fetch('/api/ai/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          prompt: input,
+          // Context tambahan agar AI lebih pintar
+          ph: 7.2, 
+          temp: 28,
+          fish_species: "Ikan Arwana"
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setMessages(prev => [...prev, { role: 'ai', content: data.analysis }]);
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      setMessages(prev => [...prev, { 
+        role: 'ai', 
+        content: 'Maaf Aziz, terjadi kendala saat menghubungkan ke otak AI. Coba lagi nanti ya!' 
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -29,15 +71,17 @@ export default function AIChatPage() {
             <div>
               <h2 className="text-lg font-black text-slate-900 tracking-tight">AeroFeed Smart Assistant</h2>
               <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Powered by Gemini AI</p>
+                <div className={`w-1.5 h-1.5 rounded-full ${isLoading ? 'bg-amber-500 animate-bounce' : 'bg-green-500 animate-pulse'}`} />
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  {isLoading ? 'AI is thinking...' : 'Powered by Gemini AI'}
+                </p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Message Area */}
-        <div className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px]">
           {messages.map((msg, i) => (
             <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`flex gap-4 max-w-[75%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
@@ -46,9 +90,9 @@ export default function AIChatPage() {
                 }`}>
                   {msg.role === 'ai' ? <Bot size={20} /> : <User size={20} />}
                 </div>
-                <div className={`p-5 rounded-[2rem] text-sm font-medium leading-relaxed shadow-sm ${
+                <div className={`p-5 rounded-[2rem] text-sm font-medium leading-relaxed shadow-sm transition-all ${
                   msg.role === 'ai' 
-                  ? 'bg-slate-50 text-slate-800 rounded-tl-none' 
+                  ? 'bg-white border border-slate-100 text-slate-800 rounded-tl-none' 
                   : 'bg-cyan-600 text-white rounded-tr-none'
                 }`}>
                   {msg.content}
@@ -56,6 +100,14 @@ export default function AIChatPage() {
               </div>
             </div>
           ))}
+          {isLoading && (
+            <div className="flex justify-start animate-pulse">
+               <div className="bg-slate-50 p-4 rounded-2xl flex items-center gap-2">
+                 <Loader2 size={16} className="animate-spin text-cyan-600" />
+                 <span className="text-xs font-bold text-slate-400">Mengetik balasan...</span>
+               </div>
+            </div>
+          )}
         </div>
 
         {/* Input Area */}
@@ -66,14 +118,16 @@ export default function AIChatPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Tanyakan analisis air atau saran pakan..."
-              className="flex-1 bg-transparent px-4 py-2 outline-none text-sm font-bold text-slate-700"
+              disabled={isLoading}
+              placeholder={isLoading ? "Mohon tunggu..." : "Tanyakan analisis air atau saran pakan..."}
+              className="flex-1 bg-transparent px-4 py-2 outline-none text-sm font-bold text-slate-700 disabled:opacity-50"
             />
             <button 
               onClick={sendMessage}
-              className="w-12 h-12 bg-cyan-600 text-white rounded-2xl flex items-center justify-center hover:bg-cyan-700 transition-all shadow-lg shadow-cyan-100"
+              disabled={isLoading || !input.trim()}
+              className="w-12 h-12 bg-cyan-600 text-white rounded-2xl flex items-center justify-center hover:bg-cyan-700 transition-all shadow-lg shadow-cyan-100 disabled:bg-slate-300 disabled:shadow-none"
             >
-              <Send size={20} />
+              {isLoading ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} />}
             </button>
           </div>
         </div>
@@ -106,7 +160,7 @@ export default function AIChatPage() {
         <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-[2rem] p-6 text-white shadow-sm relative overflow-hidden">
           <Sparkles className="text-cyan-400 mb-4" size={24} />
           <p className="text-xs font-bold leading-relaxed opacity-80 italic">
-            "Berdasarkan riset agricultural aquaculture, menjaga pH stabil di angka 7-8 adalah kunci pertumbuhan Arwana."
+            "Saran AI: Menjaga pH stabil di angka 7-8 adalah kunci pertumbuhan Arwana. Gunakan AeroFeed untuk otomatisasi pH."
           </p>
           <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-cyan-500/10 rounded-full blur-2xl" />
         </div>

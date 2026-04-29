@@ -9,7 +9,7 @@ import {
   ShieldCheck, 
   Award, 
   UserCircle2 
-} from "lucide-react"; // Import sudah diperbaiki di sini
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function LandingPage() {
@@ -23,7 +23,8 @@ export default function LandingPage() {
             <div className="w-8 h-8 bg-cyan-600 rounded-lg flex items-center justify-center text-white font-black">A</div>
             <span className="text-xl font-black tracking-tighter text-cyan-900">AeroFeed</span>
           </div>
-          <Link href="/dashboard">
+          {/* UBAH: Diarahkan ke /login */}
+          <Link href="/login">
             <button className="bg-cyan-600 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-cyan-700 transition-all">
               Launch App
             </button>
@@ -41,17 +42,17 @@ export default function LandingPage() {
             AeroFeed integrates IoT sensors and machine learning to optimize fish nutrition and maximizing growth.
           </p>
           
-          {/* Penambahan Visual Alat IoT */}
           <div className="relative mt-12 mb-20">
             <div className="absolute inset-0 bg-cyan-200/30 blur-3xl rounded-full scale-75 -z-10"></div>
             <img 
-              src="/iot-device-mockup.png" // Ganti dengan foto AeroFeed milikmu
+              src="/iot-device-mockup.png" 
               alt="AeroFeed IoT Device"
               className="w-full max-w-2xl mx-auto rounded-3xl shadow-2xl border-4 border-white"
             />
           </div>
 
-          <Link href="/dashboard">
+          {/* UBAH: Diarahkan ke /login */}
+          <Link href="/login">
             <button className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all mx-auto">
               Try SmartFin Demo <ArrowRight size={18} />
             </button>
@@ -59,10 +60,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CORE TECH ── */}
+      {/* ── CORE TECH (Tetap Sama) ── */}
       <section className="py-20 bg-slate-50 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
+        <div className="max-w-6xl mx-auto text-center md:text-left">
+          <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
               <div className="w-12 h-12 bg-cyan-100 text-cyan-600 rounded-2xl flex items-center justify-center mb-6 mx-auto md:mx-0">
                 <Cpu size={24} />
@@ -123,12 +124,11 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-black mb-4 tracking-tight text-slate-900">Meet the Visionaries.</h2>
-            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+            <p className="text-lg text-slate-500 max-w-2xl mx-auto font-medium">
               Founded by <strong>Abdul Aziz Setiadi Haryanto</strong> and a dedicated team of Software Engineering students from Universitas Prasetiya Mulya.
             </p>
           </div>
 
-          {/* Grid Para Founder */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-20">
             {[
               { name: "Abdul Aziz", role: "Software Engineering" },
@@ -147,10 +147,9 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Detail & Achievement */}
           <div className="bg-slate-50 rounded-[3rem] p-8 md:p-12 flex flex-col md:flex-row items-center gap-12">
             <div className="md:w-1/2">
-              <ul className="space-y-4 text-slate-700 font-medium">
+              <ul className="space-y-4 text-slate-700 font-bold text-sm">
                 <li className="flex items-center gap-3">
                   <CheckCircle2 className="text-cyan-500" size={20} /> STEM Students at Universitas Prasetiya Mulya
                 </li>
@@ -175,7 +174,8 @@ export default function LandingPage() {
       <footer className="bg-slate-900 py-16 px-6 text-white text-center">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold mb-8 tracking-tight">Ready to join the aquaculture revolution?</h2>
-          <Link href="/dashboard">
+          {/* UBAH: Diarahkan ke /login */}
+          <Link href="/login">
             <button className="bg-white text-slate-900 px-10 py-4 rounded-2xl font-black hover:bg-cyan-50 transition-all">
               Get Started with AeroFeed
             </button>
