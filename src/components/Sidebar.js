@@ -1,10 +1,29 @@
 // src/components/Sidebar.js
+import { useEffect, useState } from 'react'; // Tambahkan useEffect & useState
 import { X, LayoutDashboard, CalendarClock, BatteryCharging, UserCircle2, LogOut } from "lucide-react";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 export default function Sidebar({ isOpen, onClose }) {
   const router = useRouter();
+
+  // 1. State untuk data user dinamis
+  const [userData, setUserData] = useState({
+    full_name: 'Guest',
+    initials: '??'
+  });
+
+  // 2. Logic: Ambil data dari localStorage saat mount
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      const parsedUser = JSON.parse(savedUser);
+      setUserData({
+        full_name: parsedUser.full_name || 'Guest User',
+        initials: parsedUser.full_name ? parsedUser.full_name.substring(0, 2).toUpperCase() : 'AZ'
+      });
+    }
+  }, []);
 
   const menuItems = [
     { name: 'Home', icon: LayoutDashboard, path: '/dashboard' },
@@ -14,12 +33,9 @@ export default function Sidebar({ isOpen, onClose }) {
   ];
 
   const handleLogout = () => {
-  // 1. Hapus data user dari localStorage
-  localStorage.removeItem('user');
-  
-  // 2. Arahkan pengguna kembali ke halaman login
-  router.push('/login');
-};
+    localStorage.removeItem('user'); // Hapus session
+    router.push('/login'); // Kembali ke login
+  };
 
   return (
     <aside className={`
@@ -65,12 +81,16 @@ export default function Sidebar({ isOpen, onClose }) {
         })}
       </nav>
 
-      {/* User Info & Logout di bawah */}
+      {/* ── USER INFO & LOGOUT DINAMIS ── */}
       <div className="mt-auto space-y-4">
         <div className="p-4 bg-slate-50 rounded-[1.5rem] border border-slate-100 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-cyan-600 flex items-center justify-center text-white font-black text-xs">AZ</div>
+          {/* Avatar Inisial Dinamis */}
+          <div className="w-10 h-10 rounded-xl bg-cyan-600 flex items-center justify-center text-white font-black text-xs uppercase">
+            {userData.initials}
+          </div>
           <div className="overflow-hidden">
-            <p className="text-slate-900 font-bold text-xs truncate">Abdul Aziz</p>
+            {/* Nama Dinamis */}
+            <p className="text-slate-900 font-bold text-xs truncate">{userData.full_name}</p>
             <p className="text-slate-400 text-[9px] font-black uppercase">Standard Plan</p>
           </div>
         </div>
