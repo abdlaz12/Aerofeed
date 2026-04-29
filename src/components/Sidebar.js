@@ -19,6 +19,7 @@ export default function Sidebar({ isOpen, onClose }) {
   
   // 2. Arahkan pengguna kembali ke halaman login
   router.push('/login');
+};
 
   return (
     <aside className={`
@@ -73,11 +74,9 @@ export default function Sidebar({ isOpen, onClose }) {
             <p className="text-slate-400 text-[9px] font-black uppercase">Standard Plan</p>
           </div>
         </div>
-        
         <button 
           onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-3 py-4 md:py-5 rounded-[2rem] bg-white text-red-500 font-black text-sm hover:bg-red-50 transition-all border border-red-50 shadow-sm"
-        >
+          className="w-full flex items-center justify-center gap-3 py-4 md:py-5 rounded-[2rem] bg-white text-red-500 font-black text-sm hover:bg-red-50 transition-all border border-red-50 shadow-sm">
           <LogOut size={18} /> Sign Out
         </button>
       </div>
