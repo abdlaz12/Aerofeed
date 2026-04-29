@@ -1,5 +1,5 @@
-import dbConnect from '../../../lib/dbConnect';
-import SensorData from '../../../models/SensorData';
+import dbConnect from '../../../lib/mongodb';
+import SensorData from '../../../models/SensorLog';
 
 export default async function handler(req, res) {
   const { method } = req;
