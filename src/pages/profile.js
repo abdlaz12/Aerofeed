@@ -18,7 +18,10 @@ export default function Profile() {
     job: 'Guest User'
   });
 
-  // 1. Logic: Ambil data dari localStorage saat halaman dimuat
+  // State untuk statistik perangkat riil
+  const [stats, setStats] = useState({ devices: 0, ponds: 0 });
+
+  // 1. Logic: Ambil data dari localStorage & Fetch Stats saat halaman dimuat
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
@@ -26,10 +29,29 @@ export default function Profile() {
       setUserData({
         full_name: parsedUser.full_name || 'Guest',
         email: parsedUser.email || '-',
-        job: parsedUser.job || 'Software Engineering' // Default fallback
+        job: parsedUser.job || 'Software Engineering'
       });
+
+      // Panggil fungsi untuk menghitung jumlah device milik user
+      fetchUserStats(parsedUser.id);
     }
   }, []);
+
+  // Fungsi untuk mengambil jumlah perangkat dari MongoDB
+  const fetchUserStats = async (userId) => {
+    try {
+      const res = await fetch(`/api/tank/list?user_id=${userId}`);
+      const result = await res.json();
+      if (result.success) {
+        setStats({
+          devices: result.data.length,
+          ponds: result.data.length // Asumsi 1 device per pond
+        });
+      }
+    } catch (err) {
+      console.error("Gagal mengambil statistik:", err);
+    }
+  };
 
   // 2. Logic: Fungsi Logout
   const handleLogout = () => {
@@ -101,19 +123,18 @@ export default function Profile() {
               <div className="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/20 transition-all duration-700" />
             </div>
 
-            {/* Quick Stats Grid */}
+            {/* Quick Stats Grid - Menggunakan data dinamis dari MongoDB */}
             <div className="bg-white rounded-[2.5rem] p-6 border border-slate-100 shadow-sm grid grid-cols-2 gap-4">
               <div className="text-center p-5 bg-slate-50/50 rounded-3xl border border-slate-50">
-                <p className="text-2xl font-black text-slate-900">2</p>
+                <p className="text-2xl font-black text-slate-900">{stats.devices}</p>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Devices</p>
               </div>
               <div className="text-center p-5 bg-slate-50/50 rounded-3xl border border-slate-50">
-                <p className="text-2xl font-black text-slate-900">5</p>
+                <p className="text-2xl font-black text-slate-900">{stats.ponds}</p>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Ponds</p>
               </div>
             </div>
 
-            {/* Tombol Logout dengan handleLogout */}
             <button 
               onClick={handleLogout}
               className="w-full flex items-center justify-center gap-3 py-4 md:py-5 rounded-[2rem] bg-white text-red-500 font-black text-sm hover:bg-red-50 transition-all border border-red-50 shadow-sm"
@@ -122,7 +143,7 @@ export default function Profile() {
             </button>
           </div>
 
-          {/* ── RIGHT: SETTINGS GROUPS (Tetap sama) ── */}
+          {/* ── RIGHT: SETTINGS GROUPS ── */}
           <div className="lg:col-span-2 space-y-6">
             {groups.map((grp, gi) => (
               <div key={gi} className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
