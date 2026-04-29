@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import NotificationDropdown from '../components/NotificationDropdown';
 import { 
   Wifi, Fish, ChevronRight, CheckCircle2, Bell, 
-  Sparkles, ChevronDown, Monitor, Activity, Zap, Plus 
+  Sparkles, ChevronDown, Monitor, Activity, Zap 
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from 'next/link';
@@ -14,36 +14,33 @@ export default function DashboardPage() {
   const [feeding, setFeeding] = useState(false);
   const [showNotif, setShowNotif] = useState(false);
   
-  // State untuk Multi-Device
+  // LOGIKA DINAMIS: Daftar device diambil dari database
   const [devices, setDevices] = useState([]); 
   const [selectedDevice, setSelectedDevice] = useState("");
   const [isDeviceOpen, setIsDeviceOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false); // State Modal
 
   const notifRef = useRef(null);
   const deviceRef = useRef(null);
 
-  // 1. FETCH DAFTAR TANK MILIK USER
-  const fetchUserDevices = async () => {
-    const savedUser = JSON.parse(localStorage.getItem('user'));
-    if (!savedUser) return;
-
-    try {
-      const res = await fetch(`/api/tank/list?user_id=${savedUser.id}`);
-      const result = await res.json();
-      if (result.success && result.data.length > 0) {
-        setDevices(result.data);
-        // Hanya set default jika sebelumnya kosong
-        if (!selectedDevice) setSelectedDevice(result.data[0].device_id);
-      }
-    } catch (err) { console.error("Error fetching devices:", err); }
-  };
-
+  // 1. FETCH DAFTAR TANK MILIK USER (Dijalankan sekali saat load)
   useEffect(() => {
+    const fetchUserDevices = async () => {
+      const savedUser = JSON.parse(localStorage.getItem('user'));
+      if (!savedUser) return;
+
+      try {
+        const res = await fetch(`/api/tank/list?user_id=${savedUser.id}`);
+        const result = await res.json();
+        if (result.success && result.data.length > 0) {
+          setDevices(result.data);
+          setSelectedDevice(result.data[0].device_id); // Set device pertama sebagai default
+        }
+      } catch (err) { console.error("Error fetching devices:", err); }
+    };
     fetchUserDevices();
   }, []);
 
-  // 2. FETCH DATA SENSOR
+  // 2. FETCH DATA SENSOR (Real-time setiap 10 detik)
   useEffect(() => {
     if (!selectedDevice) return;
 
@@ -62,25 +59,6 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, [selectedDevice]);
 
-  // 3. HANDLER TAMBAH DEVICE
-  const handleAddDevice = async (formData) => {
-    const savedUser = JSON.parse(localStorage.getItem('user'));
-    try {
-      const res = await fetch('/api/tank/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, user_id: savedUser.id }),
-      });
-      const result = await res.json();
-      if (result.success) {
-        fetchUserDevices(); // Refresh list
-        setIsAddModalOpen(false);
-      } else {
-        alert(result.message);
-      }
-    } catch (err) { console.error("Error adding device:", err); }
-  };
-
   const getStatusColor = (val, min, max) => {
     if (val === '--') return 'text-slate-400';
     const num = parseFloat(val);
@@ -88,6 +66,7 @@ export default function DashboardPage() {
     return 'text-green-400';
   };
 
+  // Helper untuk mendapatkan nama device yang sedang terpilih
   const activeDeviceName = devices.find(d => d.device_id === selectedDevice)?.name || "Select Device";
 
   return (
@@ -100,6 +79,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-3 w-full md:w-auto">
+            {/* DEVICE SELECTOR DINAMIS */}
             <div className="relative flex-1 md:flex-none" ref={deviceRef}>
               <button 
                 onClick={() => setIsDeviceOpen(!isDeviceOpen)}
@@ -119,36 +99,26 @@ export default function DashboardPage() {
 
               {isDeviceOpen && (
                 <div className="absolute top-full right-0 mt-3 w-64 bg-white rounded-[1.5rem] shadow-xl border border-slate-50 py-2 z-[100] animate-in fade-in slide-in-from-top-2">
-                  <div className="max-h-48 overflow-y-auto">
-                    {devices.length === 0 ? (
-                      <p className="px-5 py-3 text-xs text-slate-400 font-bold uppercase italic">No Device Found</p>
-                    ) : (
-                      devices.map((device) => (
-                        <button
-                          key={device.device_id}
-                          onClick={() => { setSelectedDevice(device.device_id); setIsDeviceOpen(false); }}
-                          className={`w-full flex items-center justify-between px-5 py-3 text-sm font-bold transition-colors
-                            ${selectedDevice === device.device_id ? 'text-cyan-600 bg-cyan-50/50' : 'text-slate-500 hover:bg-slate-50'}`}
-                        >
-                          {device.name}
-                          {selectedDevice === device.device_id && <div className="w-1.5 h-1.5 rounded-full bg-cyan-600" />}
-                        </button>
-                      ))
-                    )}
-                  </div>
-                  {/* TOMBOL ADD NEW DEVICE DI DROPDOWN */}
-                  <div className="border-t border-slate-50 mt-2 pt-2">
-                    <button 
-                      onClick={() => { setIsAddModalOpen(true); setIsDeviceOpen(false); }}
-                      className="w-full px-5 py-3 text-xs font-black text-cyan-600 hover:bg-cyan-50 transition-colors flex items-center gap-2 uppercase tracking-widest"
-                    >
-                      <Plus size={14} /> Add New Tank
-                    </button>
-                  </div>
+                  {devices.length === 0 ? (
+                    <p className="px-5 py-3 text-xs text-slate-400 font-bold uppercase italic">No Device Found</p>
+                  ) : (
+                    devices.map((device) => (
+                      <button
+                        key={device.device_id}
+                        onClick={() => { setSelectedDevice(device.device_id); setIsDeviceOpen(false); }}
+                        className={`w-full flex items-center justify-between px-5 py-3 text-sm font-bold transition-colors
+                          ${selectedDevice === device.device_id ? 'text-cyan-600 bg-cyan-50/50' : 'text-slate-500 hover:bg-slate-50'}`}
+                      >
+                        {device.name}
+                        {selectedDevice === device.device_id && <div className="w-1.5 h-1.5 rounded-full bg-cyan-600" />}
+                      </button>
+                    ))
+                  )}
                 </div>
               )}
             </div>
 
+            {/* NOTIF BELL */}
             <div className="relative" ref={notifRef}>
               <button onClick={() => setShowNotif(!showNotif)} className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center text-slate-400 hover:text-cyan-600 transition-all relative">
                 <Bell size={22} />
@@ -159,7 +129,9 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        {/* MONITORING CARD */}
+        {/* ... Sisa UI Dashboard (Monitoring Card, AI Analysis, Feeding Control) tetap sama ... */}
+        
+        {/* CONTOH PENERAPAN DATA SENSOR PADA MONITORING CARD */}
         <section className="bg-slate-900 rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden group">
           <div className="relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -174,13 +146,6 @@ export default function DashboardPage() {
             </div>
           </div>
         </section>
-
-        {/* MODAL KOMPONEN */}
-        <AddDeviceModal 
-          isOpen={isAddModalOpen} 
-          onClose={() => setIsAddModalOpen(false)} 
-          onAdd={handleAddDevice} 
-        />
       </div>
     </ProtectedRoute>
   );
