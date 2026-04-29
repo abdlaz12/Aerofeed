@@ -13,6 +13,13 @@ export default function Sidebar({ isOpen, onClose }) {
     { name: 'Profile', icon: UserCircle2, path: '/profile' },
   ];
 
+  const handleLogout = () => {
+  // 1. Hapus data user dari localStorage
+  localStorage.removeItem('user');
+  
+  // 2. Arahkan pengguna kembali ke halaman login
+  router.push('/login');
+
   return (
     <aside className={`
       fixed left-0 top-0 h-screen w-72 bg-white border-r border-slate-100 flex flex-col p-8 z-[100]
@@ -67,9 +74,11 @@ export default function Sidebar({ isOpen, onClose }) {
           </div>
         </div>
         
-        <button className="w-full flex items-center gap-4 px-5 py-4 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all font-bold text-sm">
-          <LogOut size={22} />
-          <span>Logout</span>
+        <button 
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-3 py-4 md:py-5 rounded-[2rem] bg-white text-red-500 font-black text-sm hover:bg-red-50 transition-all border border-red-50 shadow-sm"
+        >
+          <LogOut size={18} /> Sign Out
         </button>
       </div>
     </aside>
