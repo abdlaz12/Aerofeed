@@ -31,6 +31,7 @@ const groups = [
 
 export default function Profile() {
   return (
+    <ProtectedRoute>
     <div className="space-y-6 md:space-y-8 pb-10 px-1 md:px-0">
       
       {/* ── HEADER ── */}
@@ -116,5 +117,6 @@ export default function Profile() {
 
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

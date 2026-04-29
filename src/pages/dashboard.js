@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from 'next/link';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 export default function DashboardPage() {
   const [sensor, setSensor] = useState({ ph: '--', temp: '--' });
@@ -68,6 +69,7 @@ export default function DashboardPage() {
   }, [selectedDevice]);
 
   return (
+    <ProtectedRoute>
     <div className="space-y-8 pb-10">
       
       {/* ── TOP HEADER ── */}
@@ -252,5 +254,6 @@ export default function DashboardPage() {
         </section>
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

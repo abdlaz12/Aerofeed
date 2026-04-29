@@ -17,6 +17,7 @@ export default function SchedulePage() {
   };
 
   return (
+    <ProtectedRoute>
     <div className="space-y-8 pb-10">
       {/* ── HEADER ── */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -119,5 +120,6 @@ export default function SchedulePage() {
         </button>
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

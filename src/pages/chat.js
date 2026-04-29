@@ -14,6 +14,7 @@ export default function AIChatPage() {
   };
 
   return (
+    <ProtectedRoute>
     <div className="flex gap-6 h-[calc(100vh-100px)]">
       
       {/* ── KOLOM KIRI: MAIN CHAT ── */}
@@ -110,5 +111,6 @@ export default function AIChatPage() {
         </div>
       </div>
     </div>
+    </ProtectedRoute>
   );
 }
