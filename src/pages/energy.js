@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BatteryCharging, Zap, Activity, Clock, AlertTriangle, ZapOff } from "lucide-react";
-
+import ProtectedRoute from '../components/ProtectedRoute';
 // Komponen Gauge Responsif
 function CircularProgress({ pct, label, charging }) {
   const r = 65; 

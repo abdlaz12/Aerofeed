@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CalendarClock, Clock, Trash2, Plus, Sparkles, ChevronRight, Settings2 } from "lucide-react";
 import Link from 'next/link';
 import { motion, AnimatePresence } from "framer-motion";
+import ProtectedRoute from '../components/ProtectedRoute';
 
 const initialSchedules = [
   { id: 1, time: "06:00", period: "AM", label: "Morning Feed", portion: "Medium", enabled: true },

@@ -4,6 +4,7 @@ import {
   Smartphone, CheckCircle2, Settings, Award, Globe, Activity
 } from "lucide-react";
 import Link from 'next/link';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 // Data groups (Organized for Responsive View)
 const groups = [

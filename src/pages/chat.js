@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Send, Bot, User, Sparkles, Brain, Info, Activity } from "lucide-react";
+import ProtectedRoute from '../components/ProtectedRoute';
 
 export default function AIChatPage() {
   const [messages, setMessages] = useState([
