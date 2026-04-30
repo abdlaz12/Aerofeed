@@ -165,7 +165,7 @@ export default function DashboardPage() {
                 <Activity size={20} />
                 <p className="text-xs font-black uppercase tracking-[0.2em]">Live pH Level</p>
               </div>
-              <p className="text-8xl md:text-9xl font-black tracking-tighter">{sensor.ph}</p>
+              <p className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tighter">{sensor.ph}</p>
               <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-bold ${getStatusColor(sensor.ph)}`}>
                 <div className={`w-2 h-2 rounded-full animate-pulse ${sensor.ph !== '--' ? 'bg-current' : 'bg-slate-500'}`} />
                 {sensor.ph === '--' ? 'Menunggu Data' : 'Status Optimal'}
@@ -177,7 +177,7 @@ export default function DashboardPage() {
                 <Zap size={20} />
                 <p className="text-xs font-black uppercase tracking-[0.2em]">Water Temp</p>
               </div>
-              <p className="text-8xl md:text-9xl font-black tracking-tighter">{sensor.temp}°</p>
+              <p className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tighter">{sensor.temp}°</p>
               <p className="text-sm font-bold text-slate-400">Suhu ideal untuk {activeDevice?.fish_species || 'ikan'} Anda</p>
             </div>
           </div>

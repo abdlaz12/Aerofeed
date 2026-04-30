@@ -1,35 +1,43 @@
 // src/components/MainLayout.js
 import { useState } from 'react';
 import Sidebar from './Sidebar';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 
 export default function MainLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex bg-[#F8FAFC] min-h-screen relative">
-      {/* Tombol Menu Mobile (Hanya muncul di layar kecil) */}
-      <button 
+    <div className="flex bg-[#F8FAFC] min-h-screen relative overflow-x-hidden">
+
+      {/* ── HAMBURGER: muncul hanya di mobile/tablet ── */}
+      <button
         onClick={() => setIsSidebarOpen(true)}
-        className="lg:hidden fixed top-6 left-6 z-[60] bg-white p-3 rounded-2xl shadow-xl border border-slate-100 text-slate-600"
+        aria-label="Open menu"
+        className="lg:hidden fixed top-5 left-5 z-[60] bg-white p-3 rounded-2xl shadow-xl border border-slate-100 text-slate-600 hover:text-cyan-600 transition-colors no-min-height"
       >
-        <Menu size={24} />
+        <Menu size={22} />
       </button>
 
-      {/* Sidebar dengan props untuk handle mobile state */}
+      {/* ── SIDEBAR ── */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-      {/* Overlay Hitam saat Sidebar terbuka di mobile */}
+      {/* ── OVERLAY (mobile) ── */}
       {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[55] lg:hidden"
+        <div
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[55] lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
-      {/* Konten Utama: ml-0 di mobile, ml-64 di desktop */}
-      <main className="flex-1 lg:ml-64 p-6 md:p-10 transition-all duration-300">
-        <div className="max-w-6xl mx-auto pt-16 lg:pt-0">
+      {/* ── MAIN CONTENT ── */}
+      {/* 
+        - pt-20: ruang untuk hamburger button di mobile
+        - lg:pt-0: tidak perlu di desktop karena sidebar selalu tampil
+        - pb-8: padding bawah aman
+        - lg:ml-64: geser konten ke kanan sejauh lebar sidebar di desktop
+      */}
+      <main className="flex-1 lg:ml-64 min-w-0 transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pt-20 lg:pt-10 pb-10">
           {children}
         </div>
       </main>

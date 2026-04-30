@@ -1,34 +1,45 @@
 /* src/styles/globals.css */
 @import "tailwindcss";
 
+/* ── DESIGN TOKENS ── */
 :root {
   --primary: #0891B2;
   --primary-dark: #06B6D4;
-  --bg-light: #F0F4F8;
+  --bg-light: #F8FAFC;
+}
+
+/* ── BASE RESET ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Prevent text-size-adjust on iOS when rotating */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
 }
 
 body {
   background-color: var(--bg-light);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   margin: 0;
-}
-
-/* Container untuk simulasi HP */
-.mobile-container {
+  /* Ensure body takes full height */
   min-height: 100vh;
-  width: 100%;
-  max-width: 448px; /* Ini adalah nilai dari max-w-md */
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-  background-color: #F0F4F8;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  /* Safe area for notched devices (iPhone X+) */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
-/* Card Style Premium */
+/* ── IMAGES: RESPONSIVE BY DEFAULT ── */
+img, video, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── CARD STYLES ── */
 .card-premium {
   background-color: white;
   border-radius: 2rem;
@@ -37,7 +48,6 @@ body {
   border: 1px solid #f1f5f9;
 }
 
-/* Gradient Card */
 .card-gradient {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   border-radius: 2.5rem;
@@ -46,40 +56,64 @@ body {
   box-shadow: 0 10px 15px -3px rgba(8, 145, 178, 0.2);
 }
 
-/* Navigasi Bawah */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 448px;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  border-top: 1px solid #f3f4f6;
-  padding: 0.75rem 0.5rem;
-  z-index: 50;
-}
+/* ── CUSTOM SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #CBD5E1; }
 
-/* Animasi Pulse */
+/* ── PULSE ANIMATION ── */
 .feed-button-pulse {
   animation: pulse-ring 2s infinite;
 }
 
 @keyframes pulse-ring {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(8, 145, 178, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(8, 145, 178, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(8, 145, 178, 0); }
+  0%   { transform: scale(0.97); box-shadow: 0 0 0 0 rgba(8, 145, 178, 0.5); }
+  70%  { transform: scale(1);    box-shadow: 0 0 0 18px rgba(8, 145, 178, 0); }
+  100% { transform: scale(0.97); box-shadow: 0 0 0 0 rgba(8, 145, 178, 0); }
 }
 
-/* Custom Scrollbar agar lebih bersih */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
+/* ── SLIDE-IN ANIMATION (chat messages) ── */
+@keyframes slide-in-from-bottom {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  animation-fill-mode: both;
+}
+.fade-in {
+  animation-name: fade-in;
+}
+.slide-in-from-bottom-2 {
+  animation-name: slide-in-from-bottom;
+}
+.duration-300 {
+  animation-duration: 0.3s;
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
 
-/* Animasi Pulse untuk tombol Feed */
-.feed-button-pulse { animation: pulse-ring 2s infinite; }
-@keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgba(8, 145, 178, 0.4); }
-  70% { box-shadow: 0 0 0 20px rgba(8, 145, 178, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(8, 145, 178, 0); }
+/* ── MOBILE BOTTOM PADDING (for content behind bottom nav on iOS) ── */
+.pb-safe {
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+}
+
+/* ── PREVENT HORIZONTAL SCROLL ── */
+.overflow-x-safe {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* ── TOUCH TARGET MINIMUM SIZE (accessibility) ── */
+button, a, [role="button"] {
+  min-height: 44px;
+}
+input, select, textarea {
+  min-height: 44px;
+}
+/* Reset for tiny decorative elements */
+.no-min-height {
+  min-height: unset;
 }
