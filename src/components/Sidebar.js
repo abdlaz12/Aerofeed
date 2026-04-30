@@ -32,9 +32,19 @@ export default function Sidebar({ isOpen, onClose }) {
     { name: 'Profile', icon: UserCircle2, path: '/profile' },
   ];
 
-  const handleLogout = () => {
-    localStorage.removeItem('user'); // Hapus session
-    router.push('/login'); // Kembali ke login
+  const handleLogout = async () => {
+    try {
+      // Memanggil API yang baru kita buat tadi
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (error) {
+      console.error("Gagal mencatat logout di server");
+    }
+
+    // Bagian paling penting: Menghapus data dari browser
+    localStorage.removeItem('user'); 
+    
+    // Arahkan ke halaman login
+    router.push('/login'); 
   };
 
   return (

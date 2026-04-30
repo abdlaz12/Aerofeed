@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
-  UserCircle2, Wifi, Shield, CreditCard, Bell,
-  ChevronRight, LogOut, HelpCircle, Star, Fish,
-  Smartphone, CheckCircle2, Settings, Award, Globe, Activity
+  UserCircle2, Wifi, CreditCard, Bell,
+  ChevronRight, HelpCircle, Fish,
+  CheckCircle2, Loader2
 } from "lucide-react";
-import Link from 'next/link';
 import ProtectedRoute from '../components/ProtectedRoute';
 
 export default function Profile() {
@@ -13,28 +12,45 @@ export default function Profile() {
   
   // State untuk menyimpan data user yang login
   const [userData, setUserData] = useState({
-    full_name: 'Guest',
-    email: '-',
-    job: 'Guest User'
+    full_name: '',
+    email: '',
+    phone_number: ''
   });
 
   // State untuk statistik perangkat riil
   const [stats, setStats] = useState({ devices: 0, ponds: 0 });
+  const [loading, setLoading] = useState(true);
 
   // 1. Logic: Ambil data dari localStorage & Fetch Stats saat halaman dimuat
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
-      setUserData({
-        full_name: parsedUser.full_name || 'Guest',
-        email: parsedUser.email || '-',
-        job: parsedUser.job || 'Software Engineering'
-      });
+    const loadData = async () => {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        try {
+          const parsedUser = JSON.parse(savedUser);
+          
+          // Pastikan mapping properti sesuai dengan data dari API Login Anda
+          const name = parsedUser.full_name || parsedUser.name || 'AeroFeed User';
+          
+          setUserData({
+            full_name: name,
+            email: parsedUser.email,
+            // Gunakan phone_number atau job sesuai struktur data login Anda
+            phone_number :parsedUser.phone_number
+          });
 
-      // Panggil fungsi untuk menghitung jumlah device milik user
-      fetchUserStats(parsedUser.id);
-    }
+          // Panggil fungsi untuk menghitung jumlah device milik user berdasarkan ID
+          if (parsedUser.id || parsedUser._id) {
+            await fetchUserStats(parsedUser.id || parsedUser._id);
+          }
+        } catch (err) {
+          console.error("Error loading user data:", err);
+        }
+      }
+      setLoading(false);
+    };
+
+    loadData();
   }, []);
 
   // Fungsi untuk mengambil jumlah perangkat dari MongoDB
@@ -53,18 +69,19 @@ export default function Profile() {
     }
   };
 
-  // 2. Logic: Fungsi Logout
-  const handleLogout = () => {
-    localStorage.removeItem('user'); // Hapus session
-    router.push('/login'); // Redirect ke login
-  };
-
   const groups = [
     {
       title: "My Device",
       rows: [
-        { icon: Wifi, label: "Device Status", sub: "AeroFeed Unit A1", value: "Connected", iconBg: "bg-cyan-50", iconColor: "text-cyan-600" },
-        { icon: Fish, label: "Feed System", sub: "Pellet dispenser active", value: "Ready", iconBg: "bg-cyan-50", iconColor: "text-cyan-600" },
+        { 
+          icon: Wifi, 
+          label: "Device Status", 
+          sub: stats.devices > 0 ? "AeroFeed Unit Active" : "No device found", 
+          value: stats.devices > 0 ? "Connected" : "Disconnected", 
+          iconBg: "bg-cyan-50", 
+          iconColor: "text-cyan-600" 
+        },
+        { icon: Fish, label: "Feed System", sub: "Pellet dispenser status", value: "Ready", iconBg: "bg-cyan-50", iconColor: "text-cyan-600" },
       ],
     },
     {
@@ -82,16 +99,21 @@ export default function Profile() {
     },
   ];
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-cyan-600" size={32} />
+      </div>
+    );
+  }
+
   return (
     <ProtectedRoute>
       <div className="space-y-6 md:space-y-8 pb-10 px-1 md:px-0">
         
-        {/* ── HEADER ── */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
-          <div>
-            <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight leading-none mb-2">Account Settings</h1>
-            <p className="text-slate-500 font-medium text-sm">Manage your farm profile and device preferences.</p>
-          </div>
+        <header>
+          <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight mb-2">Account Settings</h1>
+          <p className="text-slate-500 font-medium text-sm">Manage your farm profile and device preferences.</p>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-start">
@@ -101,16 +123,14 @@ export default function Profile() {
             <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-[2.5rem] md:rounded-[3rem] p-8 text-white shadow-2xl relative overflow-hidden group">
               <div className="relative z-10 flex flex-col items-center text-center">
                 <div className="relative mb-6">
-                  {/* Avatar dengan inisial dinamis */}
                   <div className="w-24 h-24 md:w-28 md:h-28 rounded-[2.5rem] bg-cyan-600 flex items-center justify-center text-white font-black text-3xl shadow-xl shadow-cyan-900/20 uppercase">
-                    {userData.full_name.substring(0, 2)}
+                    {userData.full_name ? userData.full_name.substring(0, 2) : 'AF'}
                   </div>
                   <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-2xl bg-green-500 border-4 border-slate-900 flex items-center justify-center">
                     <CheckCircle2 size={16} className="text-white" />
                   </div>
                 </div>
                 
-                {/* Nama dan Email dinamis */}
                 <h2 className="text-2xl font-black mb-1 tracking-tight">{userData.full_name}</h2>
                 <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">{userData.job}</p>
                 
@@ -119,11 +139,9 @@ export default function Profile() {
                   <span className="px-3 py-1.5 bg-green-500/20 text-green-400 rounded-xl text-[9px] font-black tracking-widest uppercase border border-green-500/20">Active User</span>
                 </div>
               </div>
-
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/20 transition-all duration-700" />
             </div>
 
-            {/* Quick Stats Grid - Menggunakan data dinamis dari MongoDB */}
+            {/* Quick Stats Grid */}
             <div className="bg-white rounded-[2.5rem] p-6 border border-slate-100 shadow-sm grid grid-cols-2 gap-4">
               <div className="text-center p-5 bg-slate-50/50 rounded-3xl border border-slate-50">
                 <p className="text-2xl font-black text-slate-900">{stats.devices}</p>
@@ -134,13 +152,6 @@ export default function Profile() {
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Ponds</p>
               </div>
             </div>
-
-            <button 
-              onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-3 py-4 md:py-5 rounded-[2rem] bg-white text-red-500 font-black text-sm hover:bg-red-50 transition-all border border-red-50 shadow-sm"
-            >
-              <LogOut size={18} /> Sign Out
-            </button>
           </div>
 
           {/* ── RIGHT: SETTINGS GROUPS ── */}
@@ -161,7 +172,7 @@ export default function Profile() {
                         <p className="text-slate-400 text-[10px] md:text-[11px] font-medium truncate">{row.sub}</p>
                       </div>
                       <div className="flex items-center gap-2 md:gap-4 shrink-0">
-                        {row.badge && ( <span className="px-3 py-1 bg-cyan-600 text-white text-[9px] font-black rounded-lg shadow-lg shadow-cyan-100"> {row.badge} </span> )}
+                        {row.badge && ( <span className="px-3 py-1 bg-cyan-600 text-white text-[9px] font-black rounded-lg"> {row.badge} </span> )}
                         {row.value && ( <span className="text-slate-400 text-[10px] md:text-xs font-bold uppercase tracking-tighter">{row.value}</span> )}
                         <ChevronRight size={18} className="text-slate-200 group-hover:text-cyan-600 transition-colors" />
                       </div>
@@ -171,7 +182,6 @@ export default function Profile() {
               </div>
             ))}
           </div>
-
         </div>
       </div>
     </ProtectedRoute>
